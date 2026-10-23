@@ -1,0 +1,15 @@
+{
+  "active": "<button type=\"button\" class=\"poster-export poster-export--primary\" aria-disabled=\"false\">Export PNG <span aria-hidden=\"true\">↓</span></button>",
+  "skipFocused": false,
+  "skipTransform": "matrix(1, 0, 0, 1, 0, -75)",
+  "skipRectangle": {
+    "x": 12,
+    "y": -63,
+    "width": 189.8125,
+    "height": 50,
+    "top": -63,
+    "right": 201.8125,
+    "bottom": -13,
+    "left": 12
+  }
+}

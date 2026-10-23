@@ -1,0 +1,6 @@
+{
+  "name": "AFTERHOURS",
+  "type": "fictional festival / audiovisual exhibition",
+  "tokens": {"ink": "#182018", "paper": "#f3f0e5", "lime": "#d9ff43", "coral": "#ff795e", "blue": "#263ee8"},
+  "decisions": ["Original editorial poster composition, no cards", "Oversized tightly tracked sans typography with mono marginalia", "Three chromatic acts: Signal / Fracture / Afterimage", "Native scroll, restrained transform-only motion, reduced motion fallback", "Original SVG artwork, no imagery dependencies", "All sound is explicit opt-in and stopped on page hide"]
+}

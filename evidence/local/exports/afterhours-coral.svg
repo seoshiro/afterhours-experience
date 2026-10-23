@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+<title>AFTERHOURS — a fictional festival poster</title>
+<desc>Original generative artwork, edition 00. Three acts, one imaginary night.</desc>
+<defs><clipPath id="field"><rect x="26" y="307" width="548" height="374"/></clipPath></defs>
+<rect width="600" height="800" fill="#ff795e"/>
+<g fill="#182018" font-family="Arial, Helvetica, sans-serif">
+<text x="26" y="36" font-size="10" letter-spacing="1.9">ELECTRONIC MUSIC × AUDIOVISUAL EXHIBITION</text>
+<text x="574" y="36" text-anchor="end" font-size="10">VOL. 001</text>
+<path d="M26 48H574" stroke="#182018"/>
+<text x="17" y="169" font-size="143" font-weight="900" letter-spacing="-11" textLength="555" lengthAdjust="spacingAndGlyphs">AFTER</text>
+<text x="18" y="289" font-size="143" font-weight="900" letter-spacing="-12" textLength="555" lengthAdjust="spacingAndGlyphs">HOURS</text>
+</g>
+<g clip-path="url(#field)">
+<rect x="26" y="307" width="548" height="374" fill="#263ee8"/>
+<g fill="none" stroke="#ff795e" stroke-width="2.5"><circle cx="293" cy="493" r="26"/><circle cx="293" cy="493" r="36"/><circle cx="293" cy="493" r="46"/><circle cx="293" cy="493" r="56"/><circle cx="293" cy="493" r="66"/><circle cx="293" cy="493" r="76"/><circle cx="293" cy="493" r="86"/><circle cx="293" cy="493" r="96"/><circle cx="293" cy="493" r="106"/><circle cx="293" cy="493" r="116"/><circle cx="293" cy="493" r="126"/><circle cx="293" cy="493" r="136"/><circle cx="293" cy="493" r="146"/><circle cx="293" cy="493" r="156"/><circle cx="293" cy="493" r="166"/><circle cx="293" cy="493" r="176"/><circle cx="293" cy="493" r="186"/><circle cx="293" cy="493" r="196"/><circle cx="293" cy="493" r="206"/><circle cx="293" cy="493" r="216"/><circle cx="293" cy="493" r="226"/><circle cx="293" cy="493" r="236"/><circle cx="293" cy="493" r="246"/><circle cx="293" cy="493" r="256"/></g>
+<g stroke="#182018" stroke-width="7" opacity=".92"><path d="M55 318  -90 671"/><path d="M99 318  -46 671"/><path d="M143 318  -2 671"/><path d="M187 318  42 671"/><path d="M231 318  86 671"/><path d="M275 318  130 671"/><path d="M319 318  174 671"/><path d="M363 318  218 671"/><path d="M407 318  262 671"/><path d="M451 318  306 671"/><path d="M495 318  350 671"/><path d="M539 318  394 671"/></g>
+<circle cx="293" cy="493" r="33" fill="#ff795e"/>
+<path d="M281 493h24m-12-12v24" stroke="#182018" stroke-width="2"/>
+</g>
+<g fill="#182018" font-family="Arial, Helvetica, sans-serif">
+<text x="26" y="714" font-size="13" font-weight="700" letter-spacing="1">A NIGHT OUTSIDE OF TIME.</text>
+<text x="26" y="739" font-size="10" letter-spacing=".5">I. SIGNAL / II. FRACTURE / III. AFTERIMAGE</text>
+<text x="574" y="714" text-anchor="end" font-size="13" font-weight="700">19:00—04:00</text>
+<text x="574" y="739" text-anchor="end" font-size="10">EDITION 00</text>
+<path d="M26 756H574" stroke="#182018"/>
+<text x="26" y="777" font-size="9" letter-spacing="1">FICTIONAL DESIGN CONCEPT · NO REAL EVENT</text>
+<text x="574" y="777" text-anchor="end" font-size="9">AFTERHOURS / 001</text>
+</g>
+</svg>

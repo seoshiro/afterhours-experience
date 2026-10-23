@@ -1,0 +1,14 @@
+[
+  {
+    "format": "SVG",
+    "active": "<button type=\"button\" class=\"poster-export\" aria-disabled=\"false\">Export SVG <span aria-hidden=\"true\">↓</span></button>",
+    "skipFocused": false,
+    "focusVisible": true
+  },
+  {
+    "format": "PNG",
+    "active": "<button type=\"button\" class=\"poster-export poster-export--primary\" aria-disabled=\"false\">Export PNG <span aria-hidden=\"true\">↓</span></button>",
+    "skipFocused": false,
+    "focusVisible": true
+  }
+]

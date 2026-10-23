@@ -1,0 +1,8 @@
+[
+  {
+    "format": "SVG",
+    "active": "<body>\n    <div id=\"root\"><div class=\"app-shell\"><a class=\"skip-link\" href=\"#programme\">Skip to programme</a><header class=\"site-header\"><a class=\"brand\" href=\"#top\" aria-label=\"Afterhours home\">a/h<span>✳</span></a><nav class=\"nav-links\" aria-label=\"Main navigation\"><a href=\"#acts\">The experience</a><a href=\"#programme\">Programme</a><a href=\"#poster\">Make a poster ↗</a></nav><div class=\"sound-toggle-wrap\"><button type=\"button\" class=\"sound-toggle \" aria-pressed=\"false\" title=\"Optional quiet synthesized ambient. Stops when this page is hidden.\"><span class=\"sound-toggle__mark\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></span><span>Enable sound</span></button><span class=\"sound-toggle__s",
+    "skipFocused": false,
+    "focusVisible": false
+  }
+]
