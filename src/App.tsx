@@ -1,4 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
+import * as m from 'motion/react-m'
 import Artwork from './Artwork'
 import PosterStudio from './PosterStudio'
 import SoundToggle from './SoundToggle'
@@ -12,12 +14,20 @@ const acts = [
 function initialSaved() { try { return readSaved(window.localStorage) } catch { return [] } }
 
 export default function App() {
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const [animateSave, setAnimateSave] = useState(false)
   const [discipline,setDiscipline] = useState<Discipline>('All')
   const [savedOnly,setSavedOnly] = useState(false)
   const [saved,setSaved] = useState<string[]>(initialSaved)
   const [notice,setNotice] = useState('Your night, saved only on this device.')
   const sessions = filterSessions(discipline,savedOnly,saved)
   const pendingFocus = useRef<string | null>(null)
+  useEffect(() => {
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const change = () => setReducedMotion(preference.matches)
+    preference.addEventListener('change', change)
+    return () => preference.removeEventListener('change', change)
+  }, [])
   useLayoutEffect(() => {
     const id = pendingFocus.current
     if (id === null) return
@@ -27,7 +37,8 @@ export default function App() {
       : document.querySelector<HTMLButtonElement>('.empty-state button')
     target?.focus({ preventScroll: true })
   }, [saved, savedOnly])
-  function save(id: string) {
+  function save(id: string, fromPointer: boolean) {
+    setAnimateSave(fromPointer && !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
     if (savedOnly && saved.includes(id) && document.activeElement instanceof HTMLElement && document.activeElement.dataset.sessionId === id) {
       const index = sessions.findIndex(session => session.id === id)
       const remaining = sessions.filter(session => session.id !== id)
@@ -40,7 +51,7 @@ export default function App() {
     const title = SESSIONS.find(s=>s.id===id)?.title ?? 'Session'
     setNotice(success ? `${title} ${next.includes(id) ? 'added to' : 'removed from'} your night.` : 'Storage is unavailable. Your selection works for this visit.')
   }
-  return <div className="app-shell">
+  return <MotionConfig reducedMotion="user"><LazyMotion features={domAnimation} strict><div className="app-shell">
     <a className="skip-link" href="#programme">Skip to programme</a>
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Afterhours home">a/h<span>✳</span></a>
@@ -61,11 +72,11 @@ export default function App() {
       <section className="programme" id="programme" tabIndex={-1} aria-labelledby="programme-title"><div className="section-heading"><p className="section-label">THE RUNNING ORDER / 002</p><h2 id="programme-title">Follow your<br/><em>own frequency.</em></h2><span className="section-counter">09 ENCOUNTERS</span></div><div className="programme-intro"><p>No wrong turns. Filter the programme, collect a few moments, and make the night your own.</p><span>ALL SESSIONS ARE FICTIONAL<br/>TIMES BELONG TO THE CONCEPT</span></div>
         <div className="programme-controls"><div className="filter-list" role="group" aria-label="Filter programme by discipline">{(['All','Sound','Visual','Live'] as const).map(type=><button className="filter-button" key={type} aria-pressed={discipline===type} onClick={()=>setDiscipline(type)}>{type}{type==='All' ? ' encounters' : ''}</button>)}</div><button className="saved-filter" aria-pressed={savedOnly} onClick={()=>setSavedOnly(!savedOnly)}>My night <span>{saved.length.toString().padStart(2,'0')}</span> ↗</button></div>
         <div className="programme-status"><span aria-live="polite">{sessions.length} {sessions.length===1?'encounter':'encounters'}{savedOnly?' in your night':''}</span><p role="status">{notice}</p></div>
-        <div className="programme-list">{sessions.map(session=><article className={`session session-${session.act}`} key={session.id}><div className="session-time"><time>{session.time}</time><span>{session.duration}</span></div><div className="session-info"><span className="session-type">{session.type} / {session.act}</span><h3>{session.title}</h3><p className="session-description">{session.description}</p></div><span className="session-act" aria-hidden="true">{session.act==='signal'?'↗':session.act==='fracture'?'✳':'◒'}</span><button className="save-session" data-session-id={session.id} aria-label={`${saved.includes(session.id)?'Remove':'Save'} ${session.title}`} aria-pressed={saved.includes(session.id)} onClick={()=>save(session.id)}>{saved.includes(session.id)?'✓':'+'}</button></article>)}{sessions.length===0&&<div className="empty-state"><p>{saved.length===0?'Your night is still an open canvas.':'No encounters in this frequency.'}</p><span>{saved.length===0?'Save a session with the + button to begin.':'Try another discipline or show the full programme.'}</span><button onClick={()=>{setDiscipline('All');setSavedOnly(false)}}>Explore all encounters ↗</button></div>}</div>
+        <div className="programme-list">{sessions.map(session=><article className={`session session-${session.act}`} key={session.id}><div className="session-time"><time>{session.time}</time><span>{session.duration}</span></div><div className="session-info"><span className="session-type">{session.type} / {session.act}</span><h3>{session.title}</h3><p className="session-description">{session.description}</p></div><span className="session-act" aria-hidden="true">{session.act==='signal'?'↗':session.act==='fracture'?'✳':'◒'}</span><button className="save-session" data-session-id={session.id} aria-label={`${saved.includes(session.id)?'Remove':'Save'} ${session.title}`} aria-pressed={saved.includes(session.id)} onClick={(event)=>save(session.id,event.detail>0)}><m.span key={reducedMotion ? 'still' : 'animated'} aria-hidden="true" initial={false} animate={{ rotate: saved.includes(session.id) ? 0 : -90, scale: saved.includes(session.id) ? 1.1 : 1 }} transition={{ duration: reducedMotion || !animateSave ? 0 : .16, ease: [0.2, 0.8, 0.2, 1] }}>{saved.includes(session.id)?'✓':'+'}</m.span></button></article>)}{sessions.length===0&&<div className="empty-state"><p>{saved.length===0?'Your night is still an open canvas.':'No encounters in this frequency.'}</p><span>{saved.length===0?'Save a session with the + button to begin.':'Try another discipline or show the full programme.'}</span><button onClick={()=>{setDiscipline('All');setSavedOnly(false)}}>Explore all encounters ↗</button></div>}</div>
       </section>
       <PosterStudio />
       <section className="closing" aria-labelledby="closing-title"><div className="closing-meta"><span>NO COORDINATES. NO EXPECTATIONS.</span><span>JUST A DIFFERENT STATE OF MIND.</span></div><h2 className="closing-title" id="closing-title">THE NIGHT<br/>IS <em>YOURS.</em><span aria-hidden="true">↗</span></h2><div className="closing-bottom"><p>An imaginary place.<br/>A very real feeling.</p><a href="#top">BACK TO THE SIGNAL ↑</a></div></section>
     </main>
     <footer className="site-footer"><a className="brand" href="#top" aria-label="Back to Afterhours home">a/h<span>✳</span></a><p>AFTERHOURS © 2026<br/>A FICTIONAL FESTIVAL & DESIGN CONCEPT.</p><p>NO TICKETS. NO REAL EVENT.<br/>MADE FOR THE LOVE OF WHAT COMES NEXT.</p><a href="https://github.com/seoshiro/afterhours-experience" target="_blank" rel="noreferrer">ABOUT THE PROJECT ↗</a></footer>
-  </div>
+  </div></LazyMotion></MotionConfig>
 }
