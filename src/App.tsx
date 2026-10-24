@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import Artwork from './Artwork'
 import PosterStudio from './PosterStudio'
 import SoundToggle from './SoundToggle'
@@ -17,7 +17,22 @@ export default function App() {
   const [saved,setSaved] = useState<string[]>(initialSaved)
   const [notice,setNotice] = useState('Your night, saved only on this device.')
   const sessions = filterSessions(discipline,savedOnly,saved)
+  const pendingFocus = useRef<string | null>(null)
+  useLayoutEffect(() => {
+    const id = pendingFocus.current
+    if (id === null) return
+    pendingFocus.current = null
+    const target = id
+      ? document.querySelector<HTMLButtonElement>(`button[data-session-id="${id}"]`)
+      : document.querySelector<HTMLButtonElement>('.empty-state button')
+    target?.focus({ preventScroll: true })
+  }, [saved, savedOnly])
   function save(id: string) {
+    if (savedOnly && saved.includes(id) && document.activeElement instanceof HTMLElement && document.activeElement.dataset.sessionId === id) {
+      const index = sessions.findIndex(session => session.id === id)
+      const remaining = sessions.filter(session => session.id !== id)
+      pendingFocus.current = remaining[Math.min(index, remaining.length - 1)]?.id ?? ''
+    }
     const next = toggleSaved(saved,id)
     setSaved(next)
     let success = false
@@ -46,7 +61,7 @@ export default function App() {
       <section className="programme" id="programme" tabIndex={-1} aria-labelledby="programme-title"><div className="section-heading"><p className="section-label">THE RUNNING ORDER / 002</p><h2 id="programme-title">Follow your<br/><em>own frequency.</em></h2><span className="section-counter">09 ENCOUNTERS</span></div><div className="programme-intro"><p>No wrong turns. Filter the programme, collect a few moments, and make the night your own.</p><span>ALL SESSIONS ARE FICTIONAL<br/>TIMES BELONG TO THE CONCEPT</span></div>
         <div className="programme-controls"><div className="filter-list" role="group" aria-label="Filter programme by discipline">{(['All','Sound','Visual','Live'] as const).map(type=><button className="filter-button" key={type} aria-pressed={discipline===type} onClick={()=>setDiscipline(type)}>{type}{type==='All' ? ' encounters' : ''}</button>)}</div><button className="saved-filter" aria-pressed={savedOnly} onClick={()=>setSavedOnly(!savedOnly)}>My night <span>{saved.length.toString().padStart(2,'0')}</span> ↗</button></div>
         <div className="programme-status"><span aria-live="polite">{sessions.length} {sessions.length===1?'encounter':'encounters'}{savedOnly?' in your night':''}</span><p role="status">{notice}</p></div>
-        <div className="programme-list">{sessions.map(session=><article className={`session session-${session.act}`} key={session.id}><div className="session-time"><time>{session.time}</time><span>{session.duration}</span></div><div className="session-info"><span className="session-type">{session.type} / {session.act}</span><h3>{session.title}</h3><p className="session-description">{session.description}</p></div><span className="session-act" aria-hidden="true">{session.act==='signal'?'↗':session.act==='fracture'?'✳':'◒'}</span><button className="save-session" aria-label={`${saved.includes(session.id)?'Remove':'Save'} ${session.title}`} aria-pressed={saved.includes(session.id)} onClick={()=>save(session.id)}>{saved.includes(session.id)?'✓':'+'}</button></article>)}{sessions.length===0&&<div className="empty-state"><p>{saved.length===0?'Your night is still an open canvas.':'No encounters in this frequency.'}</p><span>{saved.length===0?'Save a session with the + button to begin.':'Try another discipline or show the full programme.'}</span><button onClick={()=>{setDiscipline('All');setSavedOnly(false)}}>Explore all encounters ↗</button></div>}</div>
+        <div className="programme-list">{sessions.map(session=><article className={`session session-${session.act}`} key={session.id}><div className="session-time"><time>{session.time}</time><span>{session.duration}</span></div><div className="session-info"><span className="session-type">{session.type} / {session.act}</span><h3>{session.title}</h3><p className="session-description">{session.description}</p></div><span className="session-act" aria-hidden="true">{session.act==='signal'?'↗':session.act==='fracture'?'✳':'◒'}</span><button className="save-session" data-session-id={session.id} aria-label={`${saved.includes(session.id)?'Remove':'Save'} ${session.title}`} aria-pressed={saved.includes(session.id)} onClick={()=>save(session.id)}>{saved.includes(session.id)?'✓':'+'}</button></article>)}{sessions.length===0&&<div className="empty-state"><p>{saved.length===0?'Your night is still an open canvas.':'No encounters in this frequency.'}</p><span>{saved.length===0?'Save a session with the + button to begin.':'Try another discipline or show the full programme.'}</span><button onClick={()=>{setDiscipline('All');setSavedOnly(false)}}>Explore all encounters ↗</button></div>}</div>
       </section>
       <PosterStudio />
       <section className="closing" aria-labelledby="closing-title"><div className="closing-meta"><span>NO COORDINATES. NO EXPECTATIONS.</span><span>JUST A DIFFERENT STATE OF MIND.</span></div><h2 className="closing-title" id="closing-title">THE NIGHT<br/>IS <em>YOURS.</em><span aria-hidden="true">↗</span></h2><div className="closing-bottom"><p>An imaginary place.<br/>A very real feeling.</p><a href="#top">BACK TO THE SIGNAL ↑</a></div></section>

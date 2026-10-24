@@ -17,6 +17,25 @@ async function settle(page: Page) {
   await expect(page.locator('h1')).toBeVisible()
 }
 
+test('removing a focused My night entry restores focus to its neighbour or empty action', async ({ page }) => {
+  await page.goto('./')
+  await settle(page)
+  const save = page.getByRole('button', { name: /^Save / }).first()
+  await save.click()
+  const next = page.getByRole('button', { name: /^Save / }).first()
+  const nextLabel = (await next.getAttribute('aria-label'))!.replace(/^Save /, 'Remove ')
+  await next.click()
+  await page.getByRole('button', { name: /^My night/ }).click()
+  const first = page.getByRole('button', { name: /^Remove / }).first()
+  await first.focus()
+  await first.press('Enter')
+  const neighbour = page.getByRole('button', { name: nextLabel, exact: true })
+  await expect(neighbour).toBeFocused()
+  await neighbour.press('Enter')
+  await expect(page.getByRole('button', { name: /Explore all encounters/ })).toBeFocused()
+  await expect(page.locator('.programme-status [role="status"]')).toContainText('removed from')
+})
+
 for (const size of dimensions) {
   test(`composition, accessibility and runtime: ${size.name}`, async ({ page, baseURL }) => {
     await mkdir(evidenceDir, { recursive: true })
